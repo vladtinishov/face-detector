@@ -6,6 +6,8 @@ import { PhotoDataDto } from '../photos/dto/photo-data.dto';
 import { getAllFilesFromDirectory, getFilePath } from '../../utils/files';
 import { Multer } from 'multer';
 import { PhotosService } from '../photos/photos.service';
+import { ImageSimilarityDto } from '../photos/dto/image-similarity.dto';
+import { sortByField } from '../../utils/helpers';
 
 const WEIGHTS_PATH = './src/detector/weights';
 
@@ -106,7 +108,7 @@ export class DetectorService {
   async getSimilarityImages(image: Express.Multer.File) {
     const filesPath = getAllFilesFromDirectory('photos');
 
-    const resultImages: string[] = [];
+    const resultImages: ImageSimilarityDto[] = [];
 
     for (const imageName of filesPath) {
       const imagePath = getFilePath('photos', imageName);
@@ -115,18 +117,22 @@ export class DetectorService {
       const similarity = await this.compareFaces(tensor1, tensor2);
 
       if (similarity > 0.5) {
-        resultImages.push(imageName);
+        resultImages.push({ similarity, imageName });
       }
     }
 
     return resultImages;
   }
 
-  async getDataByFace(image: Express.Multer.File): Promise<PhotoDataDto[]> {
-    const similarImages: string[] = await this.getSimilarityImages(image);
+  async getDataByFace(image: Express.Multer.File): Promise<PhotoDataDto> {
+    const similarImages: ImageSimilarityDto[] = await this.getSimilarityImages(
+      image,
+    );
 
-    const photos = await this.photosService.getManyByNames(similarImages);
+    const mostSimilar = sortByField(similarImages, 'similarity', 'desc')[0];
 
-    return photos.map((photo) => photo.data);
+    const photo = await this.photosService.getOneByName(mostSimilar.imageName);
+
+    return photo.data;
   }
 }
