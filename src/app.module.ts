@@ -5,6 +5,7 @@ import { configuration } from '../config/configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PhotosModule } from './photos/photos.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { MulterModule } from '@nestjs/platform-express';
       dest: './uploads',
     }),
     PhotosModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],

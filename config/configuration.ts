@@ -10,7 +10,8 @@ export const configuration = () => ({
     database: process.env[`DB_NAME_${process.env.MODE.toUpperCase()}`],
     namingStrategy: new SnakeNamingStrategy(),
     autoLoadEntities: true,
-    logging: +process.env[`DB_LOG_QUERY_${process.env.MODE.toUpperCase()}`] == 1,
+    logging:
+      +process.env[`DB_LOG_QUERY_${process.env.MODE.toUpperCase()}`] == 1,
     bigNumberStrings: false,
     synchronize: true,
   },
