@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PhotosModule } from './photos/photos.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from './users/users.module';
     }),
     PhotosModule,
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

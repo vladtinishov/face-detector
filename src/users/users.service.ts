@@ -14,8 +14,8 @@ export class UsersService {
     return this.repo.find();
   }
 
-  findOne(id: number) {
-    return this.repo.findOne({ where: { id } });
+  findOne(criteria: Partial<User>) {
+    return this.repo.findOne({ where: criteria });
   }
 
   create(dto: CreateUserDto) {
