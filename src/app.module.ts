@@ -7,6 +7,9 @@ import { PhotosModule } from './photos/photos.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { RoomsModule } from './rooms/rooms.module';
+import { GroupsModule } from './groups/groups.module';
+import { SchedulesModule } from './schedules/schedules.module';
 
 @Module({
   imports: [
@@ -26,6 +29,9 @@ import { AuthModule } from './auth/auth.module';
     PhotosModule,
     UsersModule,
     AuthModule,
+    RoomsModule,
+    GroupsModule,
+    SchedulesModule,
   ],
   controllers: [],
   providers: [],
