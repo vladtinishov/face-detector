@@ -6,22 +6,23 @@ import {
   Delete,
   Body,
   Param,
+  Query,
 } from '@nestjs/common';
 import { GroupsService } from './groups.service';
-import { CreateGroupDto, UpdateGroupDto } from './dto/group.dto';
+import { CreateGroupDto, FindCriteria, UpdateGroupDto } from './dto/group.dto';
 
 @Controller('groups')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
 
   @Get()
-  async findAll() {
-    return this.groupsService.findAll();
+  async findAll(@Query() dto: FindCriteria) {
+    return this.groupsService.findAll(dto);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.groupsService.findOne(id);
+    return this.groupsService.findOne({ id });
   }
 
   @Post()

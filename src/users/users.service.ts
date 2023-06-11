@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import {CreateUserDto, FindCriteria, UpdateUserDto} from './dto/user.dto';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,8 +14,8 @@ export class UsersService {
     return this.repo.find();
   }
 
-  findOne(criteria: Partial<User>) {
-    return this.repo.findOne({ where: criteria });
+  findOne(criteria: FindCriteria) {
+    return this.repo.findOne({ where: { ...criteria } });
   }
 
   create(dto: CreateUserDto) {

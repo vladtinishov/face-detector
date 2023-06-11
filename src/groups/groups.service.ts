@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Group } from './entities/group.entity';
-import { CreateGroupDto, UpdateGroupDto } from './dto/group.dto';
+import { CreateGroupDto, FindCriteria, UpdateGroupDto } from './dto/group.dto';
 
 @Injectable()
 export class GroupsService {
@@ -11,12 +11,12 @@ export class GroupsService {
     private readonly repo: Repository<Group>,
   ) {}
 
-  async findAll(): Promise<Group[]> {
-    return this.repo.find();
+  async findAll(dto: FindCriteria = {}): Promise<Group[]> {
+    return this.repo.find({ where: dto, relations: ['users'] });
   }
 
-  async findOne(id: number): Promise<Group> {
-    return this.repo.findOne({ where: { id } });
+  async findOne(dto: FindCriteria): Promise<Group> {
+    return this.repo.findOne({ where: dto, relations: ['users'] });
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {

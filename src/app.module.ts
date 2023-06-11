@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { RoomsModule } from './rooms/rooms.module';
 import { GroupsModule } from './groups/groups.module';
-import { SchedulesModule } from './schedules/schedules.module';
+import { EventsModule } from "./events/events.module";
 
 @Module({
   imports: [
@@ -31,7 +31,7 @@ import { SchedulesModule } from './schedules/schedules.module';
     AuthModule,
     RoomsModule,
     GroupsModule,
-    SchedulesModule,
+    EventsModule,
   ],
   controllers: [],
   providers: [],
