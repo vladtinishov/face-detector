@@ -3,12 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Event } from './entities/event.entity';
 import { CreateEventDto, UpdateEventDto } from './dto/event.dto';
+import { EventReportDto, GetEventsReportsDto } from './dto/event-report.dto';
+import { EventVisit } from './entities/event-visit.entitiy';
+import { Room } from '../rooms/entities/room.entity';
+import { User } from '../users/entity/user.entity';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
     private readonly repo: Repository<Event>,
+    @InjectRepository(EventVisit)
+    private readonly eventVisit: Repository<EventVisit>,
   ) {}
 
   async findAll(): Promise<Event[]> {
@@ -31,5 +37,41 @@ export class EventsService {
 
   async remove(id: number): Promise<void> {
     await this.repo.delete({ id });
+  }
+
+  async setReport(dto: EventReportDto) {
+    return this.eventVisit.save(dto);
+  }
+
+  async getReports(dto: GetEventsReportsDto) {
+    const query = this.repo
+      .createQueryBuilder('event')
+      .where('report.groupId = :groupId', { groupId: dto.groupId })
+      .leftJoinAndMapOne('event.room', Room, 'room', 'room.id = event.roomId')
+      .leftJoin(EventVisit, 'report', 'event.id = report.eventId')
+      .leftJoinAndMapMany(
+        'event.users',
+        User,
+        'user',
+        'user.id = report.userId',
+      );
+
+    if (dto.date) query.andWhere('event.date = :date', { date: dto.date });
+    if (dto.roomId)
+      query.andWhere('report.roomId = :roomId', { date: dto.roomId });
+
+    const result = await query.getMany();
+
+    for (const event of result) {
+      for (const user of event.users) {
+        const eventVisit = await this.eventVisit.findOne({
+          where: { userId: user.id },
+        });
+
+        user.lateTime = eventVisit.lateTime;
+      }
+    }
+
+    return result;
   }
 }

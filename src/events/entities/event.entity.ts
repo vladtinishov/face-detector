@@ -5,8 +5,11 @@ import {
   ManyToOne,
   PrimaryColumn,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Room } from '../../rooms/entities/room.entity';
+import { EventVisit } from './event-visit.entitiy';
+import { User } from '../../users/entity/user.entity';
 
 @Entity('events')
 export class Event {
@@ -31,4 +34,11 @@ export class Event {
   @ManyToOne(() => Room, (room) => room.events)
   @JoinColumn({ referencedColumnName: 'id' })
   room: Room;
+
+  @OneToMany(() => EventVisit, (eventVisit) => eventVisit.room, {
+    eager: true,
+  })
+  eventVisits: EventVisit[];
+
+  users: User[];
 }

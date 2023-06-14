@@ -8,6 +8,7 @@ import {
 import { User } from '../../users/entity/user.entity';
 import { generateUniqueString } from '../../../utils/helpers';
 import {Room} from "../../rooms/entities/room.entity";
+import {EventVisit} from "../../events/entities/event-visit.entitiy";
 
 @Entity('groups')
 export class Group {
@@ -28,6 +29,11 @@ export class Group {
 
   @OneToMany(() => Room, (room) => room.group, { cascade: true, eager: true })
   rooms: Room[];
+
+  @OneToMany(() => EventVisit, (eventVisit) => eventVisit.group, {
+    eager: true,
+  })
+  eventVisits: EventVisit[];
 
   @BeforeInsert()
   async hashCode() {

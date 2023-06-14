@@ -3,9 +3,10 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryColumn, OneToMany,
 } from 'typeorm';
 import { Group } from '../../groups/entities/group.entity';
+import {EventVisit} from "../../events/entities/event-visit.entitiy";
 
 @Entity('users')
 export class User {
@@ -24,6 +25,13 @@ export class User {
   @Column({ length: 255 })
   password: string;
 
+  lateTime?: number;
+
   @ManyToOne(() => Group, (group) => group.users)
   group: Group;
+
+  @OneToMany(() => EventVisit, (eventVisit) => eventVisit.user, {
+    eager: true,
+  })
+  eventVisits: EventVisit[];
 }
